@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A simple one-week learning sprint planner."
+    />
+    <title>Learning Sprint Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="Learning Sprint Planner home">
+          <span class="brand-mark" aria-hidden="true">↗</span>
+          <span>Learning Sprint</span>
+        </a>
+        <p class="sprint-label">One-week planner</p>
+      </header>
+
+      <section class="intro" id="top" aria-labelledby="page-title">
+        <p class="eyebrow">Your focused week</p>
+        <h1 id="page-title">Make steady progress<br />on what matters.</h1>
+        <p class="intro-copy">
+          Set a clear direction, turn it into a few useful tasks, and keep your
+          momentum visible.
+        </p>
+      </section>
+
+      <section class="progress-panel" aria-labelledby="progress-heading">
+        <div class="progress-copy">
+          <p class="eyebrow">Sprint progress</p>
+          <h2 id="progress-heading"><span id="progress-percent">0%</span> complete</h2>
+          <p id="progress-summary" class="muted">Add your first task to begin.</p>
+        </div>
+        <div class="progress-visual" role="img" aria-label="0 percent complete">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="progress-track" cx="60" cy="60" r="48" />
+            <circle id="progress-ring" class="progress-ring" cx="60" cy="60" r="48" />
+          </svg>
+          <span id="progress-ring-label">0%</span>
+        </div>
+      </section>
+
+      <div class="planner-grid">
+        <section class="panel focus-panel" aria-labelledby="focus-heading">
+          <div class="section-heading">
+            <span class="step-number">01</span>
+            <div>
+              <p class="eyebrow">Choose a focus</p>
+              <h2 id="focus-heading">What are you learning?</h2>
+            </div>
+          </div>
+          <label class="sr-only" for="focus-input">Focus area</label>
+          <input
+            id="focus-input"
+            type="text"
+            maxlength="100"
+            placeholder="e.g. Conversational Spanish"
+            autocomplete="off"
+          />
+          <p class="field-hint">Keep it specific enough to guide this week.</p>
+        </section>
+
+        <section class="panel goals-panel" aria-labelledby="goals-heading">
+          <div class="section-heading">
+            <span class="step-number">02</span>
+            <div>
+              <p class="eyebrow">Set weekly goals</p>
+              <h2 id="goals-heading">What does a good week look like?</h2>
+            </div>
+          </div>
+          <label class="sr-only" for="goals-input">Weekly goals, one per line</label>
+          <textarea
+            id="goals-input"
+            rows="5"
+            maxlength="500"
+            placeholder="One goal per line&#10;e.g. Hold a 5-minute conversation&#10;Learn 40 useful phrases"
+          ></textarea>
+          <p class="field-hint">Write one goal per line. Your goals save as you type.</p>
+        </section>
+
+        <section class="panel tasks-panel" aria-labelledby="tasks-heading">
+          <div class="section-heading">
+            <span class="step-number">03</span>
+            <div>
+              <p class="eyebrow">Plan the work</p>
+              <h2 id="tasks-heading">Tasks for this sprint</h2>
+            </div>
+          </div>
+          <form id="task-form" class="task-form">
+            <label class="sr-only" for="task-input">New task</label>
+            <input
+              id="task-input"
+              type="text"
+              maxlength="160"
+              placeholder="Add a small, actionable task"
+              autocomplete="off"
+              required
+            />
+            <button type="submit">Add task <span aria-hidden="true">+</span></button>
+          </form>
+          <p id="task-error" class="form-error" role="alert" hidden></p>
+          <ul id="task-list" class="task-list" aria-live="polite"></ul>
+          <p id="empty-state" class="empty-state">Your task list is ready when you are.</p>
+        </section>
+      </div>
+    </main>
+
+    <template id="task-template">
+      <li class="task-item">
+        <label class="task-label">
+          <input class="task-checkbox" type="checkbox" />
+          <span class="custom-checkbox" aria-hidden="true">✓</span>
+          <span class="task-text"></span>
+        </label>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
