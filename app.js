@@ -1,128 +1,146 @@
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="A simple one-week learning sprint planner."
-    />
-    <title>Learning Sprint Planner</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="page-shell">
-      <header class="site-header">
-        <a class="brand" href="#top" aria-label="Learning Sprint Planner home">
-          <span class="brand-mark" aria-hidden="true">↗</span>
-          <span>Learning Sprint</span>
-        </a>
-        <p class="sprint-label">One-week planner</p>
-      </header>
+const storageKey = "learning-sprint-planner-v1";
 
-      <section class="intro" id="top" aria-labelledby="page-title">
-        <p class="eyebrow">Your focused week</p>
-        <h1 id="page-title">Make steady progress<br />on what matters.</h1>
-        <p class="intro-copy">
-          Set a clear direction, turn it into a few useful tasks, and keep your
-          momentum visible.
-        </p>
-      </section>
+const focusInput = document.querySelector("#focus-input");
+const focusGuidance = document.querySelector("#focus-guidance");
+const goalsInput = document.querySelector("#goals-input");
+const taskForm = document.querySelector("#task-form");
+const taskInput = document.querySelector("#task-input");
+const taskList = document.querySelector("#task-list");
+const taskTemplate = document.querySelector("#task-template");
+const emptyState = document.querySelector("#empty-state");
+const taskError = document.querySelector("#task-error");
+const progressPercent = document.querySelector("#progress-percent");
+const progressSummary = document.querySelector("#progress-summary");
+const progressRing = document.querySelector("#progress-ring");
+const progressRingLabel = document.querySelector("#progress-ring-label");
+const progressVisual = document.querySelector(".progress-visual");
 
-      <section class="progress-panel" aria-labelledby="progress-heading">
-        <div class="progress-copy">
-          <p class="eyebrow">Sprint progress</p>
-          <h2 id="progress-heading"><span id="progress-percent">0%</span> complete</h2>
-          <p id="progress-summary" class="muted">Add your first task to begin.</p>
-        </div>
-        <div class="progress-visual" role="img" aria-label="0 percent complete">
-          <svg viewBox="0 0 120 120" aria-hidden="true">
-            <circle class="progress-track" cx="60" cy="60" r="48" />
-            <circle id="progress-ring" class="progress-ring" cx="60" cy="60" r="48" />
-          </svg>
-          <span id="progress-ring-label">0%</span>
-        </div>
-      </section>
+let sprint = loadSprint();
 
-      <div class="planner-grid">
-        <section class="panel focus-panel" aria-labelledby="focus-heading">
-          <div class="section-heading">
-            <span class="step-number">01</span>
-            <div>
-              <p class="eyebrow">Choose a focus</p>
-              <h2 id="focus-heading">What are you learning?</h2>
-            </div>
-          </div>
-          <label class="sr-only" for="focus-input">Focus area</label>
-          <input
-            id="focus-input"
-            type="text"
-            maxlength="100"
-            placeholder="e.g. Conversational Spanish"
-            autocomplete="off"
-          />
-          <p id="focus-guidance" class="field-hint focus-guidance" aria-live="polite"></p>
-        </section>
+function loadSprint() {
+  try {
+    const storedSprint = localStorage.getItem(storageKey);
+    if (!storedSprint) return { focus: "", goals: "", tasks: [] };
 
-        <section class="panel goals-panel" aria-labelledby="goals-heading">
-          <div class="section-heading">
-            <span class="step-number">02</span>
-            <div>
-              <p class="eyebrow">Set weekly goals</p>
-              <h2 id="goals-heading">What does a good week look like?</h2>
-            </div>
-          </div>
-          <label class="sr-only" for="goals-input">Weekly goals, one per line</label>
-          <textarea
-            id="goals-input"
-            rows="5"
-            maxlength="500"
-            placeholder="One goal per line&#10;e.g. Hold a 5-minute conversation&#10;Learn 40 useful phrases"
-          ></textarea>
-          <p class="field-hint">Write one goal per line. Your goals save as you type.</p>
-        </section>
+    const parsedSprint = JSON.parse(storedSprint);
+    return {
+      focus: typeof parsedSprint.focus === "string" ? parsedSprint.focus : "",
+      goals: typeof parsedSprint.goals === "string" ? parsedSprint.goals : "",
+      tasks: Array.isArray(parsedSprint.tasks) ? parsedSprint.tasks : [],
+    };
+  } catch {
+    return { focus: "", goals: "", tasks: [] };
+  }
+}
 
-        <section class="panel tasks-panel" aria-labelledby="tasks-heading">
-          <div class="section-heading">
-            <span class="step-number">03</span>
-            <div>
-              <p class="eyebrow">Plan the work</p>
-              <h2 id="tasks-heading">Tasks for this sprint</h2>
-            </div>
-          </div>
-          <form id="task-form" class="task-form">
-            <label class="sr-only" for="task-input">New task</label>
-            <input
-              id="task-input"
-              type="text"
-              maxlength="160"
-              placeholder="Add a small, actionable task"
-              autocomplete="off"
-            />
-            <button type="submit">Add task <span aria-hidden="true">+</span></button>
-          </form>
-          <p id="task-error" class="form-error" role="alert" hidden></p>
-          <ul id="task-list" class="task-list" aria-live="polite"></ul>
-          <p id="empty-state" class="empty-state">Your task list is ready when you are.</p>
-        </section>
-      </div>
-    </main>
+function saveSprint() {
+  localStorage.setItem(storageKey, JSON.stringify(sprint));
+}
 
-    <template id="task-template">
-      <li class="task-item">
-        <label class="task-label">
-          <input class="task-checkbox" type="checkbox" />
-          <span class="custom-checkbox" aria-hidden="true">✓</span>
-          <span class="task-text"></span>
-        </label>
-      </li>
-    </template>
+function createTaskId() {
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
 
-    <script src="app.js"></script>
-  </body>
-</html>
+function renderTasks() {
+  taskList.replaceChildren();
+
+  sprint.tasks.forEach((task) => {
+    const item = taskTemplate.content.cloneNode(true);
+    const checkbox = item.querySelector(".task-checkbox");
+    const label = item.querySelector(".task-label");
+    const text = item.querySelector(".task-text");
+
+    checkbox.checked = task.completed;
+    checkbox.dataset.taskId = task.id;
+    label.htmlFor = `task-${task.id}`;
+    checkbox.id = `task-${task.id}`;
+    text.textContent = task.text;
+    taskList.append(item);
+  });
+
+  emptyState.hidden = sprint.tasks.length > 0;
+}
+
+function renderProgress() {
+  const total = sprint.tasks.length;
+  const completed = sprint.tasks.filter((task) => task.completed).length;
+  const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+  const circumference = 301.593;
+
+  progressPercent.textContent = `${percent}%`;
+  progressRingLabel.textContent = `${percent}%`;
+  progressRing.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+  progressVisual.setAttribute("aria-label", `${percent} percent complete`);
+
+  if (total === 0) {
+    progressSummary.textContent = "Add your first task to begin.";
+  } else if (completed === total) {
+    progressSummary.textContent = `All ${total} task${total === 1 ? "" : "s"} complete — great work!`;
+  } else {
+    progressSummary.textContent = `${completed} of ${total} task${total === 1 ? "" : "s"} complete`;
+  }
+}
+
+function renderFocusGuidance() {
+  const hasFocus = sprint.focus.trim().length > 0;
+  focusGuidance.textContent = hasFocus
+    ? "Keep it specific enough to guide this week."
+    : "Add a focus area to give your sprint a clear direction.";
+  focusGuidance.classList.toggle("is-guidance", !hasFocus);
+}
+
+function render() {
+  focusInput.value = sprint.focus;
+  goalsInput.value = sprint.goals;
+  renderFocusGuidance();
+  renderTasks();
+  renderProgress();
+}
+
+focusInput.addEventListener("input", () => {
+  sprint.focus = focusInput.value;
+  saveSprint();
+  renderFocusGuidance();
+});
+
+goalsInput.addEventListener("input", () => {
+  sprint.goals = goalsInput.value;
+  saveSprint();
+});
+
+taskForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const text = taskInput.value.trim();
+
+  if (!text) {
+    taskError.textContent = "Enter a task before adding it.";
+    taskError.hidden = false;
+    taskInput.focus();
+    return;
+  }
+
+  sprint.tasks.push({ id: createTaskId(), text, completed: false });
+  taskInput.value = "";
+  taskError.hidden = true;
+  saveSprint();
+  renderTasks();
+  renderProgress();
+  taskInput.focus();
+});
+
+taskInput.addEventListener("input", () => {
+  taskError.hidden = true;
+});
+
+taskList.addEventListener("change", (event) => {
+  if (!event.target.matches(".task-checkbox")) return;
+
+  const task = sprint.tasks.find((item) => item.id === event.target.dataset.taskId);
+  if (!task) return;
+
+  task.completed = event.target.checked;
+  saveSprint();
+  renderProgress();
+});
+
+render();
