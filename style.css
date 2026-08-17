@@ -70,13 +70,16 @@ input[type="text"]:focus, textarea:focus { border-color: var(--moss); box-shadow
 .form-error { color: #a8382d; font-size: .85rem; margin: 12px 0 0; }
 .task-list { list-style: none; margin: 20px 0 0; padding: 0; }
 .task-item { border-top: 1px solid var(--line); }
-.task-label { align-items: center; cursor: pointer; display: flex; gap: 12px; min-height: 61px; }
+.task-content { align-items: center; display: flex; gap: 12px; min-height: 61px; }
+.task-label { align-items: center; cursor: pointer; display: flex; flex: 1 1 auto; gap: 12px; min-width: 0; }
 .task-checkbox { height: 1px; opacity: 0; position: absolute; width: 1px; }
 .custom-checkbox { align-items: center; border: 1.5px solid #a4b4ac; border-radius: 50%; color: transparent; display: inline-flex; flex: 0 0 auto; font-size: .72rem; font-weight: 700; height: 20px; justify-content: center; transition: all .15s ease; width: 20px; }
 .task-checkbox:focus-visible + .custom-checkbox { box-shadow: 0 0 0 3px rgba(22,99,83,.25); }
 .task-checkbox:checked + .custom-checkbox { background: var(--moss); border-color: var(--moss); color: white; }
-.task-text { line-height: 1.4; }
+.task-text { line-height: 1.4; min-width: 0; overflow-wrap: anywhere; }
 .task-checkbox:checked ~ .task-text { color: var(--muted); text-decoration: line-through; }
+.delete-task { background: transparent; border: 0; color: var(--muted); flex: 0 0 auto; font-size: 1.35rem; line-height: 1; padding: 8px; }
+.delete-task:hover { color: #a8382d; }
 .empty-state { color: var(--muted); font-size: .92rem; margin: 23px 0 3px; }
 .empty-state[hidden] { display: none; }
 .sr-only { height: 1px; margin: -1px; overflow: hidden; position: absolute; width: 1px; clip: rect(0,0,0,0); }
